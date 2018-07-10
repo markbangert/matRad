@@ -63,6 +63,9 @@ for i = 1:length(bixelInfo)
     end
 end
 
+bixelInfo(1).phaseMatrix_ordered = bixelInfo(1).phaseMatrix(bixelInfo(1).order,:)
+
+
 %         phaseTime = motionPeriod * 10 ^ 6/numOfPhases;
 %         amp = phaseTime * motionPeriod / 4;
 %         periodicTerm =  - phaseTime / 2 + amp * abs(sin(pi * realTime/ motionPeriod));
