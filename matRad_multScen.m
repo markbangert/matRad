@@ -103,7 +103,7 @@ classdef matRad_multScen
     % constant properties which are visible outside of matRad_multScen
     properties(Constant = true)
         
-        AvailableScenCreationTYPE = {'nomScen','wcScen','impScen','rndScen'};
+        AvailableScenCreationTYPE = {'nomScen','wcScen','impScen','rndScen','beamWidth'};
     end
     
     % constant private properties which are only visible within matRad_multScen
@@ -136,6 +136,19 @@ classdef matRad_multScen
         rangeGenType_wcScen               = 'equidistant';                 % equidistant: equidistant range shifts
         scenCombType_wcScen               = 'individual';                  % individual:  no combination of range and setup scenarios
         includeNomScen_wcScen             = true;                          % include nominal scenario
+        
+        % 'beamWidth'  default parameters for  worst case scenarios
+        numOfShiftScen_beamWidth             = [0 0 0];                       % number of shifts in x y and z direction
+        shiftSize_beamWidth                  = [0 0 0];                       % given in [mm]
+        shiftGenType_beamWidth               = 'equidistant';                 % equidistant: equidistant shifts
+        shiftCombType_beamWidth              = 'individual';                  % individual:  no combination of shift scenarios
+        numOfRangeShiftScen_beamWidth        = 2;                             % number of absolute and/or relative range scnearios.
+        maxAbsRangeShift_beamWidth           = 1;                             % maximum absolute over and undershoot in mm 
+        maxRelRangeShift_beamWidth           = 3.5;                           % maximum relative over and undershoot in % 
+        rangeCombType_beamWidth              = 'combined';                    % combine absolute and relative range scenarios
+        rangeGenType_beamWidth               = 'equidistant';                 % equidistant: equidistant range shifts
+        scenCombType_beamWidth               = 'individual';                  % individual:  no combination of range and setup scenarios
+        includeNomScen_beamWidth             = true;                          % include nominal scenario
         
         % 'impScen'   create important/grid scenarios                       
         numOfShiftScen_impScen            = [0 0 0];                       % number of shifts in x y and z direction

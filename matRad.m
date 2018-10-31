@@ -29,13 +29,13 @@ load TG119.mat
 
 % meta information for treatment plan
 pln.numOfFractions  = 30;
-pln.radiationMode   = 'photons';           % either photons / protons / helium / carbon
+pln.radiationMode   = 'protons';           % either photons / protons / helium / carbon
 pln.machine         = 'Generic';
 
 % beam geometry settings
 pln.propStf.bixelWidth      = 5; % [mm] / also corresponds to lateral spot spacing for particles
-pln.propStf.gantryAngles    = [0:72:359]; % [?] ;
-pln.propStf.couchAngles     = [0 0 0 0 0]; % [?] ; 
+pln.propStf.gantryAngles    = [0]; % [?] ;
+pln.propStf.couchAngles     = [0]; % [?] ; 
 pln.propStf.numOfBeams      = numel(pln.propStf.gantryAngles);
 pln.propStf.isoCenter       = ones(pln.propStf.numOfBeams,1) * matRad_getIsoCenter(cst,ct,0);
 % optimization settings
@@ -68,6 +68,31 @@ if strcmp(pln.radiationMode,'photons')
     %dij = matRad_calcPhotonDoseVmc(ct,stf,pln,cst);
 elseif strcmp(pln.radiationMode,'protons') || strcmp(pln.radiationMode,'helium') || strcmp(pln.radiationMode,'carbon')
     dij = matRad_calcParticleDose(ct,stf,pln,cst);
+end
+
+%% dij magic
+dij1=dij;dij2=dij;dij3=dij;clear dij
+
+%% adjust mult scen for rob opt
+pln.multScen = matRad_multScen(ct,'beamWidth');
+
+%% hack dij
+dij = dij1;
+dij.physicalDose = [];
+dij.physicalDose = cell(size(pln.multScen.scenMask));
+
+dij.physicalDose{1,1,1} = dij1.physicalDose{1};
+dij.physicalDose{1,1,2} = dij2.physicalDose{1};
+dij.physicalDose{1,1,3} = dij3.physicalDose{1};
+
+%% set objectives to robustness
+
+for i = 1:size(cst,1)
+    if ~isempty(cst{i,6})
+        for j = 1:numel(cst{i,6})
+            cst{i,6}(j).robustness  = 'COWC';
+        end
+    end
 end
 
 %% inverse planning for imrt
